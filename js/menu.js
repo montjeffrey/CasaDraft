@@ -1,30 +1,36 @@
 // Function to check if text content matches
 function hasTextContent(element, text) {
-    return element.textContent.trim().toLowerCase() === text.toLowerCase();
+    return element && element.textContent.trim().toLowerCase() === text.toLowerCase();
 }
 
 // Function to create a detailed menu item view
 function createDetailedMenuItem(item) {
-    const detailDiv = document.createElement('div');
-    detailDiv.className = 'menu-item-detail';
-    detailDiv.style.cssText = `
-        background: white;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
-    `;
+    console.log('Creating detailed menu item:', item);
     
-    detailDiv.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-            <h4 style="color: var(--forest); font-size: 1.2rem; margin: 0;">${item.title}</h4>
-            <div style="color: var(--orange); font-weight: 600; font-size: 1.1rem;">$${item.price}</div>
-        </div>
-        <p style="color: var(--sage); margin: 0; font-size: 0.95rem;">${item.description || 'No description available.'}</p>
-    `;
+    const itemElement = document.createElement('div');
+    itemElement.className = 'menu-item-detail';
     
-    return detailDiv;
+    // Title
+    const title = document.createElement('h4');
+    title.textContent = item.title;
+    itemElement.appendChild(title);
+    
+    // Description
+    if (item.description) {
+        const description = document.createElement('p');
+        description.textContent = item.description;
+        itemElement.appendChild(description);
+    }
+    
+    // Price
+    if (item.price) {
+        const price = document.createElement('div');
+        price.className = 'price';
+        price.textContent = item.price;
+        itemElement.appendChild(price);
+    }
+    
+    return itemElement;
 }
 
 // Function to show detailed view for a category
@@ -154,12 +160,12 @@ async function loadMenuItems() {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const menuItems = await response.json();
-        console.log('Menu items loaded:', menuItems);
+        const menuData = await response.json();
+        console.log('Menu data loaded:', menuData);
 
         // Group items by category
         const itemsByCategory = {};
-        menuItems.forEach(item => {
+        menuData.forEach(item => {
             if (!itemsByCategory[item.category]) {
                 itemsByCategory[item.category] = [];
             }
@@ -171,87 +177,51 @@ async function loadMenuItems() {
         const categoryContainers = document.querySelectorAll('.menu-category');
         console.log('Found category containers:', categoryContainers.length);
 
-        // For each category container
         categoryContainers.forEach(container => {
-            const categoryTitle = container.querySelector('h3').textContent;
-            console.log('Processing category:', categoryTitle);
-            const items = itemsByCategory[categoryTitle] || [];
-            console.log('Items for category:', items);
-            
-            const menuItemsContainer = container.querySelector('.menu-items');
-            if (!menuItemsContainer) {
-                console.warn('Menu items container not found for category:', categoryTitle);
-                return;
-            }
-            
-            // Clear existing items
-            menuItemsContainer.innerHTML = '';
-            
-            // Add up to 3 items as preview
-            items.slice(0, 3).forEach(item => {
-                const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item';
-                menuItem.innerHTML = `
-                    <h4>${item.title}</h4>
-                    <p style="color: var(--light-green); font-size: 0.9rem;">${item.description ? item.description.substring(0, 60) + '...' : ''}</p>
-                `;
-                menuItemsContainer.appendChild(menuItem);
-            });
-            
-            // Add "View More" button if there are more items
-            if (items.length > 3) {
-                const viewMoreBtn = document.createElement('button');
-                viewMoreBtn.className = 'view-more-btn';
-                viewMoreBtn.textContent = `View ${items.length - 3} more items`;
-                viewMoreBtn.style.cssText = `
-                    background: var(--orange);
-                    color: white;
-                    border: none;
-                    padding: 0.5rem 1rem;
-                    border-radius: 5px;
-                    margin-top: 1rem;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                `;
-                viewMoreBtn.onmouseover = () => {
-                    viewMoreBtn.style.background = 'var(--red)';
-                };
-                viewMoreBtn.onmouseout = () => {
-                    viewMoreBtn.style.background = 'var(--orange)';
-                };
-                menuItemsContainer.appendChild(viewMoreBtn);
-            }
-            
+            const categoryTitle = container.querySelector('h3');
+            if (!categoryTitle) return;
+
+            const categoryName = categoryTitle.textContent.trim();
+            console.log('Processing category:', categoryName);
+
+            const items = itemsByCategory[categoryName] || [];
+            console.log(`Found ${items.length} items for category: ${categoryName}`);
+
             // Add click handler to show details
-            container.addEventListener('click', (e) => {
-                // Don't trigger if clicking the close button
-                if (e.target.classList.contains('close-details')) {
-                    return;
-                }
-                console.log('Category clicked:', categoryTitle);
-                showCategoryDetails(container, items);
+            container.addEventListener('click', () => {
+                console.log(`Clicked on category: ${categoryName}`);
+                showCategoryDetails(categoryName, items);
             });
-        });
 
-        // Add escape key handler
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                hideCategoryDetails();
+            // Show preview items
+            const menuItemsContainer = container.querySelector('.menu-items');
+            if (menuItemsContainer) {
+                items.slice(0, 3).forEach(item => {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'menu-item';
+                    
+                    const title = document.createElement('h4');
+                    title.textContent = item.title;
+                    previewItem.appendChild(title);
+                    
+                    if (item.description) {
+                        const description = document.createElement('p');
+                        description.textContent = item.description;
+                        previewItem.appendChild(description);
+                    }
+                    
+                    menuItemsContainer.appendChild(previewItem);
+                });
             }
         });
-
     } catch (error) {
         console.error('Error loading menu items:', error);
         const menuContainer = document.querySelector('.menu-categories');
         if (menuContainer) {
-            menuContainer.innerHTML = `
-                <div style="color: var(--cream); text-align: center; padding: 2rem;">
-                    <p>Unable to load menu items. Please try again later.</p>
-                </div>
-            `;
+            menuContainer.innerHTML = '<p style="color: var(--cream); text-align: center;">Unable to load menu items. Please try again later.</p>';
         }
     }
 }
 
-// Load menu items when the page loads
+// Load menu items when the DOM is ready
 document.addEventListener('DOMContentLoaded', loadMenuItems);
