@@ -128,9 +128,16 @@ function createGalleryItem(item) {
 async function loadFacebookContent() {
     const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
     if (!galleryGrid) return;
-    
+    // Fix centering: make parent block and full width
+    if (galleryGrid.parentElement && galleryGrid.parentElement.classList.contains('gallery-grid')) {
+        galleryGrid.parentElement.style.display = 'block';
+        galleryGrid.parentElement.style.width = '100%';
+    } else {
+        galleryGrid.style.display = 'block';
+        galleryGrid.style.width = '100%';
+    }
     galleryGrid.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
             <div class="loading" style="text-align: center; font-size: 1.2rem; margin-bottom: 1rem; color: #012f22;">Facebook gallery coming soon!</div>
             <a href="https://www.facebook.com/casamexicankitchen" target="_blank" class="cta-button">View Our Facebook Page</a>
         </div>
@@ -141,9 +148,16 @@ async function loadFacebookContent() {
 async function loadYouTubeContent() {
     const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
     if (!galleryGrid) return;
-    
+    // Fix centering: make parent block and full width
+    if (galleryGrid.parentElement && galleryGrid.parentElement.classList.contains('gallery-grid')) {
+        galleryGrid.parentElement.style.display = 'block';
+        galleryGrid.parentElement.style.width = '100%';
+    } else {
+        galleryGrid.style.display = 'block';
+        galleryGrid.style.width = '100%';
+    }
     galleryGrid.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
             <div class="loading" style="text-align: center; font-size: 1.2rem; margin-bottom: 1rem; color: #012f22;">YouTube gallery coming soon!</div>
             <a href="https://www.youtube.com/@casamexicankitchen" target="_blank" class="cta-button">View Our YouTube Channel</a>
         </div>
