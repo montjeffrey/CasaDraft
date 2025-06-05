@@ -4,6 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('.gallery-tab');
     const contents = document.querySelectorAll('.gallery-content');
     
+    // Set initial active state
+    const socialTab = document.querySelector('.gallery-tab[data-tab="social"]');
+    const socialContent = document.getElementById('social-gallery');
+    tabs.forEach(t => t.classList.remove('active'));
+    contents.forEach(c => c.classList.remove('active'));
+    socialTab.classList.add('active');
+    socialContent.classList.add('active');
+    
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             // Remove active class from all tabs and contents
@@ -33,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Load custom photos
+    // Load custom photos (but don't show them yet)
     loadCustomPhotos();
     
     // Load initial social media content (Instagram by default)
