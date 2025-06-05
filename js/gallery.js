@@ -131,6 +131,18 @@ async function loadInstagramContent() {
         // Show loading state
         galleryGrid.innerHTML = '<div class="loading">Loading Instagram feed...</div>';
 
+        // Load Instagram embed script if not already loaded
+        if (!window.instgrm) {
+            await new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = '//www.instagram.com/embed.js';
+                script.async = true;
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('Failed to load Instagram embed script'));
+                document.body.appendChild(script);
+            });
+        }
+
         // Create Instagram embed
         const embed = document.createElement('blockquote');
         embed.className = 'instagram-media';
@@ -142,48 +154,44 @@ async function loadInstagramContent() {
         galleryGrid.innerHTML = '';
         galleryGrid.appendChild(embed);
 
-        // Wait for Instagram embed script to load
-        await new Promise((resolve, reject) => {
-            if (window.instgrm) {
-                resolve();
-            } else {
-                const checkInterval = setInterval(() => {
-                    if (window.instgrm) {
-                        clearInterval(checkInterval);
-                        resolve();
-                    }
-                }, 100);
-
-                // Timeout after 10 seconds
-                setTimeout(() => {
-                    clearInterval(checkInterval);
-                    reject(new Error('Instagram embed script failed to load'));
-                }, 10000);
-            }
-        });
-
         // Process the Instagram embed
         if (window.instgrm) {
             window.instgrm.Embeds.process();
             
-            // Add a small delay to ensure the embed is processed
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Check if the embed was processed successfully
-            const processedEmbed = galleryGrid.querySelector('.instagram-media');
-            if (!processedEmbed || processedEmbed.innerHTML === '') {
-                throw new Error('Instagram embed failed to process');
-            }
+            // Wait for the embed to be processed
+            await new Promise((resolve, reject) => {
+                let attempts = 0;
+                const maxAttempts = 20; // 2 seconds total
+                const checkInterval = setInterval(() => {
+                    attempts++;
+                    const processedEmbed = galleryGrid.querySelector('.instagram-media');
+                    if (processedEmbed && processedEmbed.innerHTML !== '') {
+                        clearInterval(checkInterval);
+                        resolve();
+                    } else if (attempts >= maxAttempts) {
+                        clearInterval(checkInterval);
+                        reject(new Error('Instagram embed failed to process'));
+                    }
+                }, 100);
+            });
         } else {
             throw new Error('Instagram embed script not loaded');
         }
     } catch (error) {
         console.error('Error loading Instagram content:', error);
         galleryGrid.innerHTML = `
-            <div class="error-message">
-                <p>Unable to load Instagram feed. Please try again later.</p>
-                <a href="https://www.instagram.com/casamexicankitchen/" target="_blank" rel="noopener noreferrer" 
-                   style="color: var(--orange); text-decoration: none; margin-top: 1rem; display: inline-block;">
+            <div class="error-message" style="text-align: center; padding: 2rem;">
+                <p style="color: var(--red); margin-bottom: 1rem;">Unable to load Instagram feed. Please try again later.</p>
+                <a href="https://www.instagram.com/casamexicankitchen/" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   style="color: var(--orange); 
+                          text-decoration: none; 
+                          padding: 0.5rem 1rem;
+                          border: 2px solid var(--orange);
+                          border-radius: 50px;
+                          transition: all 0.3s ease;
+                          display: inline-block;">
                     Visit our Instagram profile
                 </a>
             </div>`;
