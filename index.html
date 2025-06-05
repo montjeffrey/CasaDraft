@@ -388,8 +388,16 @@
         .menu-item {
             text-align: left;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+            padding: 1rem;
             border-bottom: 1px solid rgba(244, 243, 240, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
         
         .menu-item:last-child {
@@ -399,12 +407,21 @@
         
         .menu-item h4 {
             color: var(--cream);
-            margin-bottom: 0.5rem;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.2rem;
+            font-weight: 500;
         }
         
         .menu-item p {
             color: var(--light-green);
             font-size: 0.9rem;
+            margin: 0;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+        
+        .menu-items {
+            padding: 0.5rem;
         }
         
         .menu-category-details {

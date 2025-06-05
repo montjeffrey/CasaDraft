@@ -281,6 +281,9 @@ async function loadMenuItems() {
             // Show preview items
             const menuItemsContainer = container.querySelector('.menu-items');
             if (menuItemsContainer) {
+                // Clear existing items
+                menuItemsContainer.innerHTML = '';
+                
                 items.slice(0, 3).forEach(item => {
                     const previewItem = document.createElement('div');
                     previewItem.className = 'menu-item';
@@ -291,7 +294,11 @@ async function loadMenuItems() {
                     
                     if (item.description) {
                         const description = document.createElement('p');
-                        description.textContent = item.description;
+                        // Truncate description if it's too long
+                        const maxLength = 80;
+                        description.textContent = item.description.length > maxLength 
+                            ? item.description.substring(0, maxLength) + '...'
+                            : item.description;
                         previewItem.appendChild(description);
                     }
                     
