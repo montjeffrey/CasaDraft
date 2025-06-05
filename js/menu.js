@@ -26,34 +26,48 @@ function createDetailedMenuItem(item) {
 
 // Function to show detailed view for a category
 function showCategoryDetails(category, items) {
+    // Remove any existing overlay first
+    hideCategoryDetails();
+
     // Create a new overlay element
     const overlay = document.createElement('div');
     overlay.className = 'menu-category-details';
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(1, 47, 34, 0.95)';
-    overlay.style.zIndex = '1000';
-    overlay.style.overflowY = 'auto';
-    overlay.style.padding = '2rem';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(1, 47, 34, 0.95);
+        z-index: 1000;
+        overflow-y: auto;
+        padding: 2rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
 
     // Create the content container
     const detailsContent = document.createElement('div');
     detailsContent.className = 'menu-details-content';
-    detailsContent.style.maxWidth = '1200px';
-    detailsContent.style.margin = '0 auto';
-    detailsContent.style.padding = '2rem';
-    detailsContent.style.backgroundColor = 'var(--cream)';
-    detailsContent.style.borderRadius = '15px';
-    detailsContent.style.position = 'relative';
+    detailsContent.style.cssText = `
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: var(--cream);
+        border-radius: 15px;
+        position: relative;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+    `;
 
     // Add category title
     const categoryTitle = document.createElement('h2');
     categoryTitle.textContent = category.querySelector('h3').textContent;
-    categoryTitle.style.color = 'var(--forest)';
-    categoryTitle.style.marginBottom = '2rem';
+    categoryTitle.style.cssText = `
+        color: var(--forest);
+        margin-bottom: 2rem;
+        font-size: 2rem;
+    `;
     detailsContent.appendChild(categoryTitle);
 
     // Add menu items
@@ -65,26 +79,36 @@ function showCategoryDetails(category, items) {
     const closeButton = document.createElement('button');
     closeButton.className = 'close-details';
     closeButton.innerHTML = '×';
-    closeButton.style.position = 'fixed';
-    closeButton.style.top = '2rem';
-    closeButton.style.right = '2rem';
-    closeButton.style.background = 'var(--orange)';
-    closeButton.style.color = 'white';
-    closeButton.style.border = 'none';
-    closeButton.style.width = '40px';
-    closeButton.style.height = '40px';
-    closeButton.style.borderRadius = '50%';
-    closeButton.style.fontSize = '24px';
-    closeButton.style.cursor = 'pointer';
-    closeButton.style.display = 'flex';
-    closeButton.style.alignItems = 'center';
-    closeButton.style.justifyContent = 'center';
-    closeButton.style.transition = 'all 0.3s ease';
+    closeButton.style.cssText = `
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        background: var(--orange);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 1001;
+    `;
 
     // Add click handler to close button
-    closeButton.addEventListener('click', () => {
-        document.body.removeChild(overlay);
-        document.body.style.overflow = '';
+    closeButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hideCategoryDetails();
+    });
+
+    // Add click handler to overlay
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            hideCategoryDetails();
+        }
     });
 
     // Add elements to overlay
@@ -93,6 +117,14 @@ function showCategoryDetails(category, items) {
 
     // Add overlay to body
     document.body.appendChild(overlay);
+
+    // Trigger animations
+    requestAnimationFrame(() => {
+        overlay.style.opacity = '1';
+        detailsContent.style.transform = 'translateY(0)';
+    });
+
+    // Prevent body scrolling
     document.body.style.overflow = 'hidden';
 }
 
@@ -100,8 +132,20 @@ function showCategoryDetails(category, items) {
 function hideCategoryDetails() {
     const activeDetails = document.querySelector('.menu-category-details');
     if (activeDetails) {
-        document.body.removeChild(activeDetails);
-        document.body.style.overflow = '';
+        // Add fade-out animation
+        activeDetails.style.opacity = '0';
+        const content = activeDetails.querySelector('.menu-details-content');
+        if (content) {
+            content.style.transform = 'translateY(20px)';
+        }
+
+        // Remove the element after animation
+        setTimeout(() => {
+            if (activeDetails.parentNode) {
+                activeDetails.parentNode.removeChild(activeDetails);
+            }
+            document.body.style.overflow = '';
+        }, 300);
     }
 }
 
