@@ -1288,26 +1288,21 @@
                 <div class="gallery-grid">
                     <!-- Instagram Carousel -->
                     <div class="instagram-carousel" style="grid-column: 1 / -1; margin: 2rem auto; max-width: 800px;">
-                        <button class="carousel-nav prev" aria-label="Previous post">❮</button>
-                        <div class="carousel-container">
-                            <div class="carousel-track">
-                                <div class="carousel-slide">
+                        <div class="carousel-container" style="position: relative; overflow: hidden; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                            <div class="carousel-track" style="display: flex; transition: transform 0.5s ease;">
+                                <div class="carousel-slide" style="min-width: 100%;">
                                     <blockquote class="instagram-media" 
-                                        data-instgrm-permalink="https://www.instagram.com/p/DJ2aS-3pBy4/"
-                                        data-instgrm-version="14"
-                                        style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
-                                    </blockquote>
-                                </div>
-                                <div class="carousel-slide">
-                                    <blockquote class="instagram-media" 
-                                        data-instgrm-permalink="https://www.instagram.com/p/C4XZQZQZQZQ/"
+                                        data-instgrm-permalink="https://www.instagram.com/casamexicankitchen/"
                                         data-instgrm-version="14"
                                         style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
                                     </blockquote>
                                 </div>
                             </div>
                         </div>
-                        <button class="carousel-nav next" aria-label="Next post">❯</button>
+                        <div class="carousel-controls" style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                            <button class="carousel-nav prev" style="background: var(--orange); color: white; border: none; padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease;" aria-label="Previous post">❮ Previous</button>
+                            <button class="carousel-nav next" style="background: var(--orange); color: white; border: none; padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease;" aria-label="Next post">Next ❯</button>
+                        </div>
                     </div>
                 </div>
             </div>

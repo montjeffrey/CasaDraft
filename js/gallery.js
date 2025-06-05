@@ -46,6 +46,91 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load initial social media content (Instagram by default)
     loadSocialMediaContent('instagram');
+
+    // Instagram Feed Configuration
+    const INSTAGRAM_USERNAME = 'casamexicankitchen';
+    const POSTS_PER_PAGE = 6;
+    let currentPage = 0;
+    let totalPosts = 0;
+    let posts = [];
+
+    // Initialize Instagram Feed
+    function initInstagramFeed() {
+        // Load Instagram posts
+        loadInstagramPosts();
+        
+        // Set up carousel navigation
+        setupCarouselNavigation();
+    }
+
+    // Load Instagram Posts
+    function loadInstagramPosts() {
+        const carouselTrack = document.querySelector('.carousel-track');
+        if (!carouselTrack) return;
+
+        // Create Instagram embed
+        const embed = document.createElement('blockquote');
+        embed.className = 'instagram-media';
+        embed.setAttribute('data-instgrm-permalink', `https://www.instagram.com/${INSTAGRAM_USERNAME}/`);
+        embed.setAttribute('data-instgrm-version', '14');
+        embed.style.cssText = 'background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);';
+
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide';
+        slide.style.minWidth = '100%';
+        slide.appendChild(embed);
+
+        carouselTrack.innerHTML = '';
+        carouselTrack.appendChild(slide);
+
+        // Reload Instagram embed script
+        if (window.instgrm) {
+            window.instgrm.Embeds.process();
+        }
+    }
+
+    // Setup Carousel Navigation
+    function setupCarouselNavigation() {
+        const prevButton = document.querySelector('.carousel-nav.prev');
+        const nextButton = document.querySelector('.carousel-nav.next');
+        const carouselTrack = document.querySelector('.carousel-track');
+
+        if (!prevButton || !nextButton || !carouselTrack) return;
+
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                updateCarousel();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentPage < Math.ceil(totalPosts / POSTS_PER_PAGE) - 1) {
+                currentPage++;
+                updateCarousel();
+            }
+        });
+    }
+
+    // Update Carousel Display
+    function updateCarousel() {
+        const carouselTrack = document.querySelector('.carousel-track');
+        if (!carouselTrack) return;
+
+        const offset = -currentPage * 100;
+        carouselTrack.style.transform = `translateX(${offset}%)`;
+    }
+
+    // Initialize when Instagram embed script is loaded
+    if (window.instgrm) {
+        initInstagramFeed();
+    } else {
+        window.addEventListener('load', function() {
+            if (window.instgrm) {
+                initInstagramFeed();
+            }
+        });
+    }
 });
 
 // Function to load custom photos
