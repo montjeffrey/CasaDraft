@@ -29,175 +29,121 @@ function createDetailedMenuItem(item) {
 
 // Function to show detailed view for a category
 function showCategoryDetails(category, items) {
-    console.log('Showing details for category:', category.querySelector('h3').textContent);
+    console.log('Showing details for category:', category);
     console.log('Items to display:', items);
 
-    // Remove any existing overlay first
-    hideCategoryDetails();
-
-    // Create a new overlay element
+    // Create overlay
     const overlay = document.createElement('div');
     overlay.className = 'menu-category-details';
-    overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(1, 47, 34, 0.95);
-        z-index: 1000;
-        overflow-y: auto;
-        padding: 2rem;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    `;
-
-    // Create the content container
-    const detailsContent = document.createElement('div');
-    detailsContent.className = 'menu-details-content';
-    detailsContent.style.cssText = `
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 3rem;
-        background-color: var(--cream);
-        border-radius: 15px;
-        position: relative;
-        transform: translateY(20px);
-        transition: transform 0.3s ease;
-    `;
-
-    // Add category title with decorative elements
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.3s ease-in-out';
+    
+    // Create content container
+    const content = document.createElement('div');
+    content.className = 'menu-details-content';
+    content.style.transform = 'translateY(20px)';
+    content.style.opacity = '0';
+    content.style.transition = 'all 0.3s ease-in-out';
+    
+    // Add category title with decorative line
     const titleContainer = document.createElement('div');
-    titleContainer.style.cssText = `
-        text-align: center;
-        margin-bottom: 3rem;
-        position: relative;
-    `;
+    titleContainer.style.textAlign = 'center';
+    titleContainer.style.marginBottom = '2rem';
+    titleContainer.style.position = 'relative';
     
-    const categoryTitle = document.createElement('h2');
-    categoryTitle.textContent = category.querySelector('h3').textContent;
-    categoryTitle.style.cssText = `
-        color: var(--forest);
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        position: relative;
-        display: inline-block;
-    `;
+    const title = document.createElement('h2');
+    title.textContent = category;
+    title.style.color = 'var(--forest)';
+    title.style.fontSize = '2.5rem';
+    title.style.marginBottom = '1rem';
     
-    // Add decorative line under title
-    const titleLine = document.createElement('div');
-    titleLine.style.cssText = `
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(90deg, var(--orange), var(--red));
-        margin: 1rem auto;
-        border-radius: 2px;
-    `;
+    const decorativeLine = document.createElement('div');
+    decorativeLine.style.width = '80px';
+    decorativeLine.style.height = '4px';
+    decorativeLine.style.background = 'linear-gradient(90deg, var(--orange), var(--red))';
+    decorativeLine.style.margin = '0 auto';
+    decorativeLine.style.borderRadius = '2px';
     
-    titleContainer.appendChild(categoryTitle);
-    titleContainer.appendChild(titleLine);
-    detailsContent.appendChild(titleContainer);
-
-    // Create items container
-    const itemsContainer = document.createElement('div');
-    itemsContainer.style.cssText = `
-        display: grid;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    `;
-
-    // Add menu items
-    if (items && items.length > 0) {
-        items.forEach(item => {
-            itemsContainer.appendChild(createDetailedMenuItem(item));
-        });
-    } else {
-        const noItems = document.createElement('p');
-        noItems.textContent = 'No items available in this category.';
-        noItems.style.cssText = `
-            color: var(--sage);
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 10px;
-        `;
-        itemsContainer.appendChild(noItems);
-    }
+    titleContainer.appendChild(title);
+    titleContainer.appendChild(decorativeLine);
+    content.appendChild(titleContainer);
     
-    detailsContent.appendChild(itemsContainer);
-
-    // Create close button
+    // Create grid container for items
+    const gridContainer = document.createElement('div');
+    gridContainer.style.display = 'grid';
+    gridContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(300px, 1fr))';
+    gridContainer.style.gap = '2rem';
+    gridContainer.style.padding = '1rem';
+    
+    // Add items to grid
+    items.forEach(item => {
+        const itemElement = createDetailedMenuItem(item);
+        if (itemElement) {
+            gridContainer.appendChild(itemElement);
+        }
+    });
+    
+    content.appendChild(gridContainer);
+    
+    // Add close button
     const closeButton = document.createElement('button');
     closeButton.className = 'close-details';
     closeButton.innerHTML = '×';
-    closeButton.style.cssText = `
-        position: fixed;
-        top: 2rem;
-        right: 2rem;
-        background: var(--orange);
-        color: white;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        font-size: 24px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        z-index: 1001;
-    `;
-
-    // Add click handler to close button
-    closeButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        hideCategoryDetails();
-    });
-
-    // Add click handler to overlay
-    overlay.addEventListener('click', (e) => {
+    closeButton.onclick = () => hideCategoryDetails(overlay);
+    
+    // Add click outside to close
+    overlay.onclick = (e) => {
         if (e.target === overlay) {
-            hideCategoryDetails();
+            hideCategoryDetails(overlay);
+        }
+    };
+    
+    // Add escape key to close
+    document.addEventListener('keydown', function escHandler(e) {
+        if (e.key === 'Escape') {
+            hideCategoryDetails(overlay);
+            document.removeEventListener('keydown', escHandler);
         }
     });
-
-    // Add elements to overlay
-    overlay.appendChild(detailsContent);
+    
+    overlay.appendChild(content);
     overlay.appendChild(closeButton);
-
-    // Add overlay to body
     document.body.appendChild(overlay);
-
-    // Trigger animations
+    
+    // Force reflow
+    overlay.offsetHeight;
+    
+    // Show overlay with animation
+    overlay.style.display = 'block';
     requestAnimationFrame(() => {
         overlay.style.opacity = '1';
-        detailsContent.style.transform = 'translateY(0)';
+        content.style.transform = 'translateY(0)';
+        content.style.opacity = '1';
     });
-
+    
     // Prevent body scrolling
     document.body.style.overflow = 'hidden';
 }
 
-// Function to hide detailed view
-function hideCategoryDetails() {
-    const activeDetails = document.querySelector('.menu-category-details');
-    if (activeDetails) {
-        // Add fade-out animation
-        activeDetails.style.opacity = '0';
-        const content = activeDetails.querySelector('.menu-details-content');
-        if (content) {
-            content.style.transform = 'translateY(20px)';
-        }
-
-        // Remove the element after animation
-        setTimeout(() => {
-            if (activeDetails.parentNode) {
-                activeDetails.parentNode.removeChild(activeDetails);
-            }
-            document.body.style.overflow = '';
-        }, 300);
+function hideCategoryDetails(overlay) {
+    if (!overlay) return;
+    
+    // Fade out animation
+    overlay.style.opacity = '0';
+    const content = overlay.querySelector('.menu-details-content');
+    if (content) {
+        content.style.transform = 'translateY(20px)';
+        content.style.opacity = '0';
     }
+    
+    // Remove overlay after animation
+    setTimeout(() => {
+        if (overlay && overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+        }
+        // Restore body scrolling
+        document.body.style.overflow = '';
+    }, 300);
 }
 
 // Function to load menu items
