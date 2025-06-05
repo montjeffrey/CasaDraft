@@ -128,6 +128,9 @@ async function loadInstagramContent() {
     if (!galleryGrid) return;
 
     try {
+        // Show loading state
+        galleryGrid.innerHTML = '<div class="loading">Loading Instagram feed...</div>';
+
         // Create Instagram embed
         const embed = document.createElement('blockquote');
         embed.className = 'instagram-media';
@@ -139,15 +142,51 @@ async function loadInstagramContent() {
         galleryGrid.innerHTML = '';
         galleryGrid.appendChild(embed);
 
+        // Wait for Instagram embed script to load
+        await new Promise((resolve, reject) => {
+            if (window.instgrm) {
+                resolve();
+            } else {
+                const checkInterval = setInterval(() => {
+                    if (window.instgrm) {
+                        clearInterval(checkInterval);
+                        resolve();
+                    }
+                }, 100);
+
+                // Timeout after 10 seconds
+                setTimeout(() => {
+                    clearInterval(checkInterval);
+                    reject(new Error('Instagram embed script failed to load'));
+                }, 10000);
+            }
+        });
+
         // Process the Instagram embed
         if (window.instgrm) {
             window.instgrm.Embeds.process();
+            
+            // Add a small delay to ensure the embed is processed
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Check if the embed was processed successfully
+            const processedEmbed = galleryGrid.querySelector('.instagram-media');
+            if (!processedEmbed || processedEmbed.innerHTML === '') {
+                throw new Error('Instagram embed failed to process');
+            }
         } else {
-            console.warn('Instagram embed script not loaded');
+            throw new Error('Instagram embed script not loaded');
         }
     } catch (error) {
         console.error('Error loading Instagram content:', error);
-        throw error;
+        galleryGrid.innerHTML = `
+            <div class="error-message">
+                <p>Unable to load Instagram feed. Please try again later.</p>
+                <a href="https://www.instagram.com/casamexicankitchen/" target="_blank" rel="noopener noreferrer" 
+                   style="color: var(--orange); text-decoration: none; margin-top: 1rem; display: inline-block;">
+                    Visit our Instagram profile
+                </a>
+            </div>`;
     }
 }
 
