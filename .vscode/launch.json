@@ -7,8 +7,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open casa_animations.html",
-            "file": "c:\\Users\\colom\\OneDrive\\Escritorio\\Coding\\CASA\\official\\casa_animations.html"
+            "name": "Open index.html",
+            "file": "c:\\Users\\colom\\OneDrive\\Escritorio\\Coding\\CASA\\official\\index.html"
         }
     ]
 }
