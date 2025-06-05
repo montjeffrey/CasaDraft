@@ -8,6 +8,7 @@ async function loadMenuItems() {
         }
         
         const menuItems = await response.json();
+        console.log('Loaded menu items:', menuItems); // Debug log
         
         // Group menu items by category
         const menuByCategory = menuItems.reduce((acc, item) => {
@@ -17,23 +18,24 @@ async function loadMenuItems() {
             acc[item.category].push(item);
             return acc;
         }, {});
+        
+        console.log('Grouped menu items:', menuByCategory); // Debug log
+
+        // Get all menu category containers
+        const categoryContainers = document.querySelectorAll('.menu-category');
+        console.log('Found category containers:', categoryContainers.length); // Debug log
 
         // Update each menu category section
-        Object.entries(menuByCategory).forEach(([category, items]) => {
-            // Find the category container by looking for an h3 with matching text
-            const categoryHeaders = document.querySelectorAll('.menu-category h3');
-            const categoryHeader = Array.from(categoryHeaders).find(h3 => h3.textContent.trim() === category);
+        categoryContainers.forEach(container => {
+            const categoryName = container.querySelector('h3').textContent.trim();
+            console.log('Processing category:', categoryName); // Debug log
             
-            if (!categoryHeader) {
-                console.warn(`Category container not found for: ${category}`);
-                return;
-            }
-
-            const categoryContainer = categoryHeader.closest('.menu-category');
-            const menuItemsContainer = categoryContainer.querySelector('.menu-items');
+            const items = menuByCategory[categoryName] || [];
+            console.log('Items for category:', items); // Debug log
             
+            const menuItemsContainer = container.querySelector('.menu-items');
             if (!menuItemsContainer) {
-                console.warn(`Menu items container not found for category: ${category}`);
+                console.warn(`Menu items container not found for category: ${categoryName}`);
                 return;
             }
             
