@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa - Authentic Northern Mexican Cuisine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f4f3f0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* Brand Colors */
+        :root {
+            --cream: #f4f3f0;
+            --forest: #012f22;
+            --sage: #4a6546;
+            --orange: #e78c3b;
+            --red: #e84228;
+            --light-green: #8aa56e;
+            --pink: #d14384;
+            --black: #000000;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(244, 243, 240, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(244, 243, 240, 0.98);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forest);
+            text-decoration: none;
+            position: relative;
+        }
+        
+        .logo::after {
+            content: ' ';
+            margin-left: 0.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--forest);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+        
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background: var(--forest);
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--cream);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-menu.active {
+            display: block;
+        }
+        
+        .mobile-menu a {
+            display: block;
+            padding: 1rem 2rem;
+            color: var(--forest);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(1,47,34,0.1);
+        }
+        
+        /* Papel Picado Banner */
+        .papel-picado {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, 
+                var(--orange) 0%, var(--orange) 16.66%, 
+                var(--red) 16.66%, var(--red) 33.33%, 
+                var(--pink) 33.33%, var(--pink) 50%, 
+                var(--light-green) 50%, var(--light-green) 66.66%, 
+                var(--sage) 66.66%, var(--sage) 83.33%, 
+                var(--orange) 83.33%);
+            z-index: 1001;
+            animation: slidePattern 8s linear infinite;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--forest) 0%, var(--sage) 100%);
+            color: var(--cream);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 8rem 2rem 4rem;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+        
+        .hero-content img[src="logo_symbol.png"] {
+            height: 220px;
+            max-width: 90vw;
+            margin-bottom: 2.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .hero .tagline {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.3s both;
+            color: var(--light-green);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease-out 0.6s both;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--orange);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 0.9s both;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 140, 59, 0.4);
+        }
+        
+        /* Floating Spice Particles */
+        .spice-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--orange);
+            border-radius: 50%;
+            animation: float 12s infinite linear;
+            opacity: 0.6;
+        }
+        
+        .spice-particle:nth-child(2n) { background: var(--red); animation-duration: 15s; }
+        .spice-particle:nth-child(3n) { background: var(--pink); animation-duration: 18s; }
+        .spice-particle:nth-child(4n) { background: var(--light-green); animation-duration: 14s; }
+        
+        /* About Section */
+        .about {
+            padding: 6rem 2rem;
+            background: var(--cream);
+        }
+        
+        .about-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            color: var(--forest);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--orange), var(--red));
+            border-radius: 2px;
+        }
+        
+        .about p {
+            font-size: 1.1rem;
+            color: var(--sage);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+        
+        .value-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--orange), var(--red), var(--pink));
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .value-card h3 {
+            color: var(--forest);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        /* Menu Preview Section */
+        .menu-preview {
+            padding: 6rem 2rem;
+            background: var(--forest);
+            color: var(--cream);
+            position: relative;
+        }
+        
+        .menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .menu-preview .section-title {
+            color: var(--cream);
+        }
+        
+        .menu-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .menu-category {
+            background: rgba(244, 243, 240, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(244, 243, 240, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .menu-category:hover {
+            background: rgba(244, 243, 240, 0.15);
+            transform: translateY(-5px);
+        }
+        
+        .menu-category h3 {
+            color: var(--orange);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .menu-item {
+            text-align: left;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(244, 243, 240, 0.2);
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .menu-item h4 {
+            color: var(--cream);
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-item p {
+            color: var(--light-green);
+            font-size: 0.9rem;
+        }
+        
+        /* Location Section */
+        .location {
+            padding: 6rem 2rem;
+            background: var(--cream);
+        }
+        
+        .location-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .location-info h2 {
+            color: var(--forest);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .location-details {
+            color: var(--sage);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .location-details strong {
+            color: var(--forest);
+            display: block;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .map-placeholder {
+            background: var(--sage);
+            height: 300px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cream);
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-placeholder::before {
+            content: '📍';
+            font-size: 3rem;
+            position: absolute;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--forest);
+            color: var(--cream);
+            padding: 4rem 2rem 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: var(--orange);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .footer-section p,
+        .footer-section a {
+            color: var(--light-green);
+            text-decoration: none;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover {
+            color: var(--orange);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: var(--sage);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .social-links a:hover {
+            background: var(--orange);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid var(--sage);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--light-green);
+        }
+        
+        .footer-logo {
+            display: inline-block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+        
+        /* Desert Scene */
+        .desert-scene {
+            height: 200px;
+            background: linear-gradient(to bottom, var(--orange) 0%, var(--red) 50%, var(--forest) 100%);
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .cactus {
+            width: 30px;
+            height: 80px;
+            background: var(--sage);
+            border-radius: 15px 15px 0 0;
+            position: relative;
+            margin: 0 1rem;
+            animation: sway 6s ease-in-out infinite;
+        }
+        
+        .cactus::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 25px;
+            background: var(--sage);
+            border-radius: 8px;
+            left: -10px;
+            top: 20px;
+        }
+        
+        .cactus::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 20px;
+            background: var(--sage);
+            border-radius: 6px;
+            right: -8px;
+            top: 35px;
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(50px) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes sway {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1deg); }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        @keyframes slidePattern {
+            0% { background-position: 0px 0px; }
+            100% { background-position: 160px 0px; }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .location-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .menu-categories {
+                grid-template-columns: 1fr;
+            }
+            
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cactus {
+                width: 20px;
+                height: 60px;
+                margin: 0 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 6rem 1rem 4rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .hero-content img[src="logo_symbol.png"] {
+                height: 120px;
+                margin-bottom: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="papel-picado"></div>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo"><img src="LOGO2.png" alt="CASA Logo" style="height:80px; vertical-align:middle;"></a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#location">Location</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="mobile-menu-btn" id="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#menu">Menu</a>
+            <a href="#location">Location</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <img src="logo_symbol.png" alt="CASA Symbol">
+            <h1>CASA</h1>
+            <p class="tagline">Experience the flavors of Mexico in Fishkill, NY</p>
+            <p>Welcome to Casa — your home for authentic Northern Mexican cuisine in the heart of Fishkill, NY. At Casa, we believe a great meal is about more than food — it's about connection, tradition, and feeling at home.</p>
+            <a href="#menu" class="cta-button">Explore Our Menu</a>
+        </div>
+        
+        <!-- Floating Spice Particles -->
+        <div class="spice-particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="spice-particle" style="left: 20%; animation-delay: 3s;"></div>
+        <div class="spice-particle" style="left: 30%; animation-delay: 6s;"></div>
+        <div class="spice-particle" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="spice-particle" style="left: 50%; animation-delay: 4s;"></div>
+        <div class="spice-particle" style="left: 60%; animation-delay: 7s;"></div>
+        <div class="spice-particle" style="left: 70%; animation-delay: 2s;"></div>
+        <div class="spice-particle" style="left: 80%; animation-delay: 5s;"></div>
+        <div class="spice-particle" style="left: 90%; animation-delay: 8s;"></div>
+    </section>
+    
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-container">
+            <h2 class="section-title">About Casa</h2>
+            <p>Our dishes are inspired by the bold, comforting flavors of Northern Mexico, and every plate we serve is a reflection of our culture, our history, and our passion for sharing it.</p>
+            <p>We created Casa to be a welcoming space for everyone — where friends gather, families celebrate, and strangers become regulars. Whether you're here for tacos and margaritas at the bar or a sit-down meal with loved ones, we invite you to relax and enjoy a dining experience that feels familiar yet unforgettable.</p>
+            <p>Our mission is simple: serve incredible food, create joyful moments, and build community around every table.</p>
+        </div>
+    </section>
+    
+    <!-- Menu Preview Section -->
+    <section class="menu-preview" id="menu">
+        <div class="menu-container">
+            <h2 class="section-title">Our Menu</h2>
+            <p style="color: var(--light-green); font-size: 1.1rem; margin-bottom: 3rem;">Authentic Northern Mexican cuisine crafted with traditional techniques and the finest ingredients</p>
+            
+            <div class="menu-categories">
+                <div class="menu-category">
+                    <h3>Tacos & Antojitos</h3>
+                    <div class="menu-item">
+                        <h4>Carne Asada Tacos</h4>
+                        <p>Grilled skirt steak with chiltepin, white onion, and fresh lime on handmade tortillas</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Al Pastor</h4>
+                        <p>Marinated pork with pineapple, onion, and cilantro</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Pescado</h4>
+                        <p>Grilled fish with cabbage slaw and chipotle crema</p>
+                    </div>
+                </div>
+                
+                <div class="menu-category">
+                    <h3>Platos Principales</h3>
+                    <div class="menu-item">
+                        <h4>Pozole Rojo</h4>
+                        <p>Traditional hominy soup with pork, guajillo chiles, and oregano</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Chile Colorado</h4>
+                        <p>Slow-braised beef in red chile sauce with beans and rice</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Mole Poblano</h4>
+                        <p>Chicken in rich, complex mole sauce with sesame seeds</p>
+                    </div>
+                </div>
+                
+                <div class="menu-category">
+                    <h3>Bebidas</h3>
+                    <div class="menu-item">
+                        <h4>Margaritas</h4>
+                        <p>Classic lime, mango, or jalapeño with premium tequila</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Agua de Jamaica</h4>
+                        <p>Refreshing hibiscus flower water with lime</p>
+                    </div>
+                    <div class="menu-item">
+                        <h4>Mexican Sodas</h4>
+                        <p>Imported Jarritos and Coca-Cola Mexicana</p>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="#contact" class="cta-button" style="margin-top: 3rem;">View Full Menu</a>
+        </div>
+    </section>
+    
+    <!-- Location Section -->
+    <section class="location" id="location">
+        <div class="location-container">
+            <div class="location-info">
+                <h2>Visit Us in Fishkill</h2>
+                <p class="location-details">
+                    Located in the heart of the Hudson Valley, Casa brings the authentic flavors of Northern Mexico to Fishkill, NY. Our warm, welcoming atmosphere makes every meal feel like a celebration.
+                </p>
+                <div class="location-details">
+                    <strong>Address:</strong>
+                    123 Main Street<br>
+                    Fishkill, NY 12524
+                    
+                    <strong>Hours:</strong>
+                    Monday - Thursday: 4:00pm - 10:00pm<br>
+                    Friday - Saturday: 4:00pm - 11:00pm<br>
+                    Sunday: 3:00pm - 9:00pm
+                    
+                    <strong>Phone:</strong>
+                    (845) 555-CASA
+                </div>
+            </div>
+            <div class="map-placeholder">
+                Interactive Map Coming Soon
+            </div>
+        </div>
+    </section>
+    
+    <!-- Desert Scene Divider -->
+    <div class="desert-scene">
+        <div class="cactus" style="animation-delay: 0s;"></div>
+        <div class="cactus" style="animation-delay: 1s; height: 70px;"></div>
+        <div class="cactus" style="animation-delay: 2s; height: 90px;"></div>
+        <div class="cactus" style="animation-delay: 0.5s; height: 60px;"></div>
+        <div class="cactus" style="animation-delay: 1.5s; height: 85px;"></div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo"><img src="LOGO2.png" alt="CASA Logo" style="height:60px; vertical-align:middle;"></div>
+                    <p>Your home for authentic Northern Mexican cuisine in Fishkill, NY. Experience the bold, comforting flavors that bring families together.</p>
+                    <div class="social-links">
+                        <a href="#" title="Facebook">📘</a>
+                        <a href="#" title="Instagram">📷</a>
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="Yelp">⭐</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p>
+                        📍 123 Main Street<br>
+                        Fishkill, NY 12524<br><br>
+                        📞 (845) 555-CASA<br>
+                        ✉️ info@casafishkill.com
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Hours</h3>
+                    <p>
+                        <strong>Monday - Thursday</strong><br>
+                        4:00pm - 10:00pm<br><br>
+                        <strong>Friday
