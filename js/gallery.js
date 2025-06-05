@@ -88,7 +88,9 @@ async function loadSocialMediaContent(platform) {
     try {
         switch (platform) {
             case 'instagram':
-                await loadInstagramContent();
+                if (typeof loadInstagramPosts === 'function') {
+                    await loadInstagramPosts();
+                }
                 break;
             case 'facebook':
                 await loadFacebookContent();
@@ -120,82 +122,6 @@ function createGalleryItem(item) {
     }
 
     return div;
-}
-
-// Function to load Instagram content
-async function loadInstagramContent() {
-    const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
-    if (!galleryGrid) return;
-
-    try {
-        // Show loading state
-        galleryGrid.innerHTML = '<div class="loading">Loading Instagram feed...</div>';
-
-        // Load Instagram embed script if not already loaded
-        if (!window.instgrm) {
-            await new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = '//www.instagram.com/embed.js';
-                script.async = true;
-                script.onload = resolve;
-                script.onerror = () => reject(new Error('Failed to load Instagram embed script'));
-                document.body.appendChild(script);
-            });
-        }
-
-        // Create Instagram embed
-        const embed = document.createElement('blockquote');
-        embed.className = 'instagram-media';
-        embed.setAttribute('data-instgrm-permalink', 'https://www.instagram.com/casamexicankitchen/');
-        embed.setAttribute('data-instgrm-version', '14');
-        embed.style.cssText = 'background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);';
-
-        // Clear the gallery grid and add the embed
-        galleryGrid.innerHTML = '';
-        galleryGrid.appendChild(embed);
-
-        // Process the Instagram embed
-        if (window.instgrm) {
-            window.instgrm.Embeds.process();
-            
-            // Wait for the embed to be processed
-            await new Promise((resolve, reject) => {
-                let attempts = 0;
-                const maxAttempts = 20; // 2 seconds total
-                const checkInterval = setInterval(() => {
-                    attempts++;
-                    const processedEmbed = galleryGrid.querySelector('.instagram-media');
-                    if (processedEmbed && processedEmbed.innerHTML !== '') {
-                        clearInterval(checkInterval);
-                        resolve();
-                    } else if (attempts >= maxAttempts) {
-                        clearInterval(checkInterval);
-                        reject(new Error('Instagram embed failed to process'));
-                    }
-                }, 100);
-            });
-        } else {
-            throw new Error('Instagram embed script not loaded');
-        }
-    } catch (error) {
-        console.error('Error loading Instagram content:', error);
-        galleryGrid.innerHTML = `
-            <div class="error-message" style="text-align: center; padding: 2rem;">
-                <p style="color: var(--red); margin-bottom: 1rem;">Unable to load Instagram feed. Please try again later.</p>
-                <a href="https://www.instagram.com/casamexicankitchen/" 
-                   target="_blank" 
-                   rel="noopener noreferrer" 
-                   style="color: var(--orange); 
-                          text-decoration: none; 
-                          padding: 0.5rem 1rem;
-                          border: 2px solid var(--orange);
-                          border-radius: 50px;
-                          transition: all 0.3s ease;
-                          display: inline-block;">
-                    Visit our Instagram profile
-                </a>
-            </div>`;
-    }
 }
 
 // Function to load Facebook content
