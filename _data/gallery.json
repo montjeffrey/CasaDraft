@@ -1,0 +1,34 @@
+{
+    "photos": [
+        {
+            "imageUrl": "/LOGO1.png",
+            "title": "CASA Logo 1",
+            "description": "Our brand identity"
+        },
+        {
+            "imageUrl": "/LOGO2.png",
+            "title": "CASA Logo 2",
+            "description": "Alternative logo design"
+        },
+        {
+            "imageUrl": "/LOGO3.png",
+            "title": "CASA Logo 3",
+            "description": "Modern logo variation"
+        },
+        {
+            "imageUrl": "/LOGO5.png",
+            "title": "CASA Logo 5",
+            "description": "Contemporary design"
+        },
+        {
+            "imageUrl": "/path820.png",
+            "title": "CASA Logo Symbol",
+            "description": "Brand symbol"
+        },
+        {
+            "imageUrl": "/LOGO_SYMBOL.png",
+            "title": "CASA Symbol",
+            "description": "Iconic brand mark"
+        }
+    ]
+} 
