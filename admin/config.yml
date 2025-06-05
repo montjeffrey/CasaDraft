@@ -38,7 +38,10 @@ collections:
       - {label: "Zip", name: "zip", widget: "string"}
       - {label: "Phone", name: "phone", widget: "string"}
       - {label: "Email", name: "email", widget: "string"}
-      - {label: "Hours", name: "hours", widget: "object", fields:
+      - label: "Hours"
+        name: "hours"
+        widget: "object"
+        fields:
           - {label: "Monday - Thursday", name: "weekday", widget: "string"}
           - {label: "Friday - Saturday", name: "weekend", widget: "string"}
-          - {label: "Sunday", name: "sunday", widget: "string"}} 
+          - {label: "Sunday", name: "sunday", widget: "string"} 

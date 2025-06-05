@@ -841,4 +841,28 @@
                     <p>
                         <strong>Monday - Thursday</strong><br>
                         4:00pm - 10:00pm<br><br>
-                        <strong>Friday
+                        <strong>Friday - Saturday</strong><br>
+                        4:00pm - 11:00pm<br><br>
+                        <strong>Sunday</strong><br>
+                        3:00pm - 9:00pm
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Add before closing body tag -->
+    <script src="js/menu.js"></script>
+    <script>
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/admin/";
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
