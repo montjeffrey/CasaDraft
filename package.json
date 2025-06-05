@@ -1,0 +1,23 @@
+{
+  "name": "official",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/montjeffrey/CasaDraft.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/montjeffrey/CasaDraft/issues"
+  },
+  "homepage": "https://github.com/montjeffrey/CasaDraft#readme",
+  "description": "",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

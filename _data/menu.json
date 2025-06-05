@@ -1,0 +1,146 @@
+[
+  {
+    "layout": "menu-item",
+    "category": "Drinks",
+    "title": "Aguas Frescas",
+    "description": "Horchata, Jamaica",
+    "price": "5",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Drinks",
+    "title": "Bottled Water",
+    "description": "Sparkling, Still",
+    "price": "9",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Appetizers",
+    "title": "Ceviche Tropical",
+    "description": "Fresh flounder, cooked in lime with cucumber, red onion, mango, cilantro, avocado. Served with mayo-chipotle, and tostadas. Spicy upon request.",
+    "price": "18",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Mexican Snack",
+    "title": "Chimichangas",
+    "description": "Deep fried flour tortilla rolled up, filled with choice of shredded beef, chicken, or potato. Served with lettuce, pickled red onion, cilantro crema, green salsa, and lime.",
+    "price": "15",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Salads",
+    "title": "Ensalada de Pollo",
+    "description": "Grilled chicken salad with romaine lettuce, cucumber, corn, broccoli, carrot, cabbage, and avocado. Honey chipotle vinagrette.",
+    "price": "17",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Salads",
+    "title": "Ensalada de Tijuana",
+    "description": "Caesar salad, deep fried chicken milanesa, with parmesan cheese, romaine lettuce, caesar dressing and tortilla strips.",
+    "price": "17",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Specials",
+    "title": "Fajita de la CASA",
+    "description": "Steak, chicken and Shrimp in a special marinade with grilled onions, peppers and mushrooms. Served with rice, beans, and flour tortillas.",
+    "price": "27",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Mexican Snack",
+    "title": "Flautas",
+    "description": "Deep fried corn tortilla rolled up, filled with choice of shredded beef, chicken, or potato. Served with lettuce, pickled red onion, cilantro crema, green salsa and lime. ",
+    "price": "15",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Drinks",
+    "title": "Fountain Drink",
+    "description": "Coke, Diet coke, Sprite, Orange, Lemonade, Free Refill",
+    "price": "4",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Appetizers",
+    "title": "Guacamole",
+    "description": "Freshly made with avocado, tomato, cilantro, onion, and dash of lime.",
+    "price": "14",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Drinks",
+    "title": "Jarritos",
+    "description": "Lime, Mandarin, Guava, Pineapple, Watermelon",
+    "price": "4",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Specials",
+    "title": "Pescado Jalisco",
+    "description": "Red snapper filet, cooked in a creamy tomato sauce with grilled onions, peppers, and mushrooms. Served with rice, beans, and flour tortillas.",
+    "price": "28",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Specials",
+    "title": "Pescado Zarandeado",
+    "description": "Fire grilled fish, smothered in a special marinade, served with rice, small salad and lime.",
+    "price": "28",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Kids Menu",
+    "title": "Pollo con Arroz",
+    "description": "Grilled Chicken breast, served with rice.",
+    "price": "13",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Kids Menu",
+    "title": "Quesadillas",
+    "description": "Two flour quesadillas, choice of beans, chicken or ground beef, served with rice",
+    "price": "11",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Appetizers",
+    "title": "Queso Fundido",
+    "description": "Melted cheese with chorizo, served with flour tortillas.",
+    "price": "12",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Kids Menu",
+    "title": "Tacos Para Niños",
+    "description": "Two soft corn tacos with choice of chicken or ground beef, lettuce, and cheese, served with rice.",
+    "price": "11",
+    "featured": false
+  },
+  {
+    "layout": "menu-item",
+    "category": "Mexican Snack",
+    "title": "Taquitos Del Mar",
+    "description": "Marinated shrimp tacos in special sauce with melted cheese with lettuce and lime.",
+    "price": "17",
+    "featured": false
+  }
+]

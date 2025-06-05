@@ -1,47 +1,16 @@
 // Function to fetch menu items from the CMS
 async function loadMenuItems() {
     try {
-        // Get all menu items from the _data/menu directory
-        const response = await fetch('/_data/menu/');
+        // Fetch menu items from the JSON file
+        const response = await fetch('/_data/menu.json');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        // Parse the directory listing
-        const text = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a')).map(a => a.href);
+        const menuItems = await response.json();
         
-        // Filter for markdown files and fetch each one
-        const menuItems = await Promise.all(
-            links
-                .filter(link => link.endsWith('.md'))
-                .map(async (link) => {
-                    const response = await fetch(link);
-                    const text = await response.text();
-                    // Parse front matter
-                    const content = text.split('---');
-                    if (content.length < 3) return null;
-                    
-                    const frontMatter = content[1].trim();
-                    const item = {};
-                    
-                    // Parse each line of front matter
-                    frontMatter.split('\n').forEach(line => {
-                        const [key, ...values] = line.split(':');
-                        if (key && values.length) {
-                            item[key.trim()] = values.join(':').trim().replace(/^["']|["']$/g, '');
-                        }
-                    });
-                    
-                    return item;
-                })
-        );
-        
-        // Filter out any null items and group by category
-        const validItems = menuItems.filter(item => item !== null);
-        const menuByCategory = validItems.reduce((acc, item) => {
+        // Group menu items by category
+        const menuByCategory = menuItems.reduce((acc, item) => {
             if (!acc[item.category]) {
                 acc[item.category] = [];
             }
