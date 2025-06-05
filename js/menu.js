@@ -5,21 +5,23 @@ function hasTextContent(element, text) {
 
 // Function to create a detailed menu item view
 function createDetailedMenuItem(item) {
-    console.log('Creating detailed view for item:', item);
     const detailDiv = document.createElement('div');
     detailDiv.className = 'menu-item-detail';
-    
-    const imageHtml = item.image ? 
-        `<img src="${item.image}" alt="${item.title}">` : 
-        `<div style="background: var(--sage); height: 200px; display: flex; align-items: center; justify-content: center; color: var(--cream); border-radius: 10px;">No Image Available</div>`;
+    detailDiv.style.cssText = `
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    `;
     
     detailDiv.innerHTML = `
-        ${imageHtml}
-        <div class="menu-item-detail-content">
-            <h4>${item.title}</h4>
-            <p>${item.description || 'No description available.'}</p>
-            <div class="price">$${item.price}</div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <h4 style="color: var(--forest); font-size: 1.2rem; margin: 0;">${item.title}</h4>
+            <div style="color: var(--orange); font-weight: 600; font-size: 1.1rem;">$${item.price}</div>
         </div>
+        <p style="color: var(--sage); margin: 0; font-size: 0.95rem;">${item.description || 'No description available.'}</p>
     `;
     
     return detailDiv;
@@ -54,9 +56,9 @@ function showCategoryDetails(category, items) {
     const detailsContent = document.createElement('div');
     detailsContent.className = 'menu-details-content';
     detailsContent.style.cssText = `
-        max-width: 1200px;
+        max-width: 800px;
         margin: 0 auto;
-        padding: 2rem;
+        padding: 3rem;
         background-color: var(--cream);
         border-radius: 15px;
         position: relative;
@@ -64,27 +66,65 @@ function showCategoryDetails(category, items) {
         transition: transform 0.3s ease;
     `;
 
-    // Add category title
+    // Add category title with decorative elements
+    const titleContainer = document.createElement('div');
+    titleContainer.style.cssText = `
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+    `;
+    
     const categoryTitle = document.createElement('h2');
     categoryTitle.textContent = category.querySelector('h3').textContent;
     categoryTitle.style.cssText = `
         color: var(--forest);
-        margin-bottom: 2rem;
-        font-size: 2rem;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
     `;
-    detailsContent.appendChild(categoryTitle);
+    
+    // Add decorative line under title
+    const titleLine = document.createElement('div');
+    titleLine.style.cssText = `
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--orange), var(--red));
+        margin: 1rem auto;
+        border-radius: 2px;
+    `;
+    
+    titleContainer.appendChild(categoryTitle);
+    titleContainer.appendChild(titleLine);
+    detailsContent.appendChild(titleContainer);
+
+    // Create items container
+    const itemsContainer = document.createElement('div');
+    itemsContainer.style.cssText = `
+        display: grid;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    `;
 
     // Add menu items
     if (items && items.length > 0) {
         items.forEach(item => {
-            detailsContent.appendChild(createDetailedMenuItem(item));
+            itemsContainer.appendChild(createDetailedMenuItem(item));
         });
     } else {
         const noItems = document.createElement('p');
         noItems.textContent = 'No items available in this category.';
-        noItems.style.color = 'var(--sage)';
-        detailsContent.appendChild(noItems);
+        noItems.style.cssText = `
+            color: var(--sage);
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+        `;
+        itemsContainer.appendChild(noItems);
     }
+    
+    detailsContent.appendChild(itemsContainer);
 
     // Create close button
     const closeButton = document.createElement('button');
