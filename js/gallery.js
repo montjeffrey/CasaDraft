@@ -7,10 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set initial active state
     const socialTab = document.querySelector('.gallery-tab[data-tab="social"]');
     const socialContent = document.getElementById('social-gallery');
-    tabs.forEach(t => t.classList.remove('active'));
-    contents.forEach(c => c.classList.remove('active'));
-    socialTab.classList.add('active');
-    socialContent.classList.add('active');
+    if (socialTab && socialContent) {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+        socialTab.classList.add('active');
+        socialContent.classList.add('active');
+    }
     
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -21,7 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add active class to clicked tab and corresponding content
             tab.classList.add('active');
             const contentId = `${tab.dataset.tab}-gallery`;
-            document.getElementById(contentId).classList.add('active');
+            const content = document.getElementById(contentId);
+            if (content) {
+                content.classList.add('active');
+            }
         });
     });
     
@@ -46,91 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load initial social media content (Instagram by default)
     loadSocialMediaContent('instagram');
-
-    // Instagram Feed Configuration
-    const INSTAGRAM_USERNAME = 'casamexicankitchen';
-    const POSTS_PER_PAGE = 6;
-    let currentPage = 0;
-    let totalPosts = 0;
-    let posts = [];
-
-    // Initialize Instagram Feed
-    function initInstagramFeed() {
-        // Load Instagram posts
-        loadInstagramPosts();
-        
-        // Set up carousel navigation
-        setupCarouselNavigation();
-    }
-
-    // Load Instagram Posts
-    function loadInstagramPosts() {
-        const carouselTrack = document.querySelector('.carousel-track');
-        if (!carouselTrack) return;
-
-        // Create Instagram embed
-        const embed = document.createElement('blockquote');
-        embed.className = 'instagram-media';
-        embed.setAttribute('data-instgrm-permalink', `https://www.instagram.com/${INSTAGRAM_USERNAME}/`);
-        embed.setAttribute('data-instgrm-version', '14');
-        embed.style.cssText = 'background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);';
-
-        const slide = document.createElement('div');
-        slide.className = 'carousel-slide';
-        slide.style.minWidth = '100%';
-        slide.appendChild(embed);
-
-        carouselTrack.innerHTML = '';
-        carouselTrack.appendChild(slide);
-
-        // Reload Instagram embed script
-        if (window.instgrm) {
-            window.instgrm.Embeds.process();
-        }
-    }
-
-    // Setup Carousel Navigation
-    function setupCarouselNavigation() {
-        const prevButton = document.querySelector('.carousel-nav.prev');
-        const nextButton = document.querySelector('.carousel-nav.next');
-        const carouselTrack = document.querySelector('.carousel-track');
-
-        if (!prevButton || !nextButton || !carouselTrack) return;
-
-        prevButton.addEventListener('click', () => {
-            if (currentPage > 0) {
-                currentPage--;
-                updateCarousel();
-            }
-        });
-
-        nextButton.addEventListener('click', () => {
-            if (currentPage < Math.ceil(totalPosts / POSTS_PER_PAGE) - 1) {
-                currentPage++;
-                updateCarousel();
-            }
-        });
-    }
-
-    // Update Carousel Display
-    function updateCarousel() {
-        const carouselTrack = document.querySelector('.carousel-track');
-        if (!carouselTrack) return;
-
-        const offset = -currentPage * 100;
-        carouselTrack.style.transform = `translateX(${offset}%)`;
-    }
-
-    // Initialize when Instagram embed script is loaded
-    if (window.instgrm) {
-        initInstagramFeed();
-    } else {
-        window.addEventListener('load', function() {
-            if (window.instgrm) {
-                initInstagramFeed();
-            }
-        });
-    }
 });
 
 // Function to load custom photos
@@ -140,6 +60,8 @@ async function loadCustomPhotos() {
         const data = await response.json();
         
         const galleryGrid = document.querySelector('#custom-gallery .gallery-grid');
+        if (!galleryGrid) return;
+        
         galleryGrid.innerHTML = ''; // Clear existing content
         
         data.photos.forEach(photo => {
@@ -150,37 +72,33 @@ async function loadCustomPhotos() {
         console.error('Error loading custom photos:', error);
         // Show error message in gallery
         const galleryGrid = document.querySelector('#custom-gallery .gallery-grid');
-        galleryGrid.innerHTML = '<p class="error-message">Error loading photos. Please try again later.</p>';
+        if (galleryGrid) {
+            galleryGrid.innerHTML = '<p class="error-message">Error loading photos. Please try again later.</p>';
+        }
     }
 }
 
 // Function to load social media content
 async function loadSocialMediaContent(platform) {
     const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
+    if (!galleryGrid) return;
+    
     galleryGrid.innerHTML = '<div class="loading">Loading content...</div>';
     
     try {
-        let content;
         switch (platform) {
             case 'instagram':
-                content = await loadInstagramContent();
+                await loadInstagramContent();
                 break;
             case 'facebook':
-                content = await loadFacebookContent();
+                await loadFacebookContent();
                 break;
             case 'youtube':
-                content = await loadYouTubeContent();
+                await loadYouTubeContent();
                 break;
             default:
                 throw new Error('Unsupported platform');
         }
-        
-        galleryGrid.innerHTML = ''; // Clear loading message
-        
-        content.forEach(item => {
-            const galleryItem = createGalleryItem(item);
-            galleryGrid.appendChild(galleryItem);
-        });
     } catch (error) {
         console.error(`Error loading ${platform} content:`, error);
         galleryGrid.innerHTML = `<p class="error-message">Error loading ${platform} content. Please try again later.</p>`;
@@ -193,7 +111,7 @@ function createGalleryItem(item) {
     div.className = 'gallery-item';
 
     if (item.embedCode) {
-        div.innerHTML = item.embedCode; // Insert the embed code directly
+        div.innerHTML = item.embedCode;
     } else {
         const img = document.createElement('img');
         img.src = item.imageUrl;
@@ -201,139 +119,50 @@ function createGalleryItem(item) {
         div.appendChild(img);
     }
 
-    const overlay = document.createElement('div');
-    overlay.className = 'gallery-item-overlay';
-
-    if (item.title) {
-        const title = document.createElement('h4');
-        title.textContent = item.title;
-        overlay.appendChild(title);
-    }
-
-    if (item.description) {
-        const description = document.createElement('p');
-        description.textContent = item.description;
-        overlay.appendChild(description);
-    }
-
-    div.appendChild(overlay);
-
-    // Add click handler for lightbox
-    div.addEventListener('click', () => {
-        showLightbox(item);
-    });
-
     return div;
 }
 
-// Function to show lightbox
-function showLightbox(item) {
-    const lightbox = document.createElement('div');
-    lightbox.className = 'lightbox';
-    
-    const content = document.createElement('div');
-    content.className = 'lightbox-content';
-    
-    const img = document.createElement('img');
-    img.src = item.imageUrl;
-    img.alt = item.title || 'Gallery image';
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'lightbox-close';
-    closeBtn.innerHTML = '×';
-    closeBtn.addEventListener('click', () => {
-        document.body.removeChild(lightbox);
-    });
-    
-    content.appendChild(img);
-    content.appendChild(closeBtn);
-    lightbox.appendChild(content);
-    
-    // Close on background click
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            document.body.removeChild(lightbox);
-        }
-    });
-    
-    // Close on escape key
-    document.addEventListener('keydown', function closeOnEscape(e) {
-        if (e.key === 'Escape') {
-            document.body.removeChild(lightbox);
-            document.removeEventListener('keydown', closeOnEscape);
-        }
-    });
-    
-    document.body.appendChild(lightbox);
-}
-
-// Social media content loading functions
+// Function to load Instagram content
 async function loadInstagramContent() {
     const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
-    const carousel = galleryGrid.querySelector('.instagram-carousel');
-    const track = carousel.querySelector('.carousel-track');
-    const slides = carousel.querySelectorAll('.carousel-slide');
-    const prevButton = carousel.querySelector('.carousel-nav.prev');
-    const nextButton = carousel.querySelector('.carousel-nav.next');
-    let currentIndex = 0;
+    if (!galleryGrid) return;
 
-    function updateCarousel() {
-        const slideWidth = slides[0].offsetWidth;
-        track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-        
-        // Update button states
-        prevButton.style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
-        nextButton.style.visibility = currentIndex === slides.length - 1 ? 'hidden' : 'visible';
-    }
+    try {
+        // Create Instagram embed
+        const embed = document.createElement('blockquote');
+        embed.className = 'instagram-media';
+        embed.setAttribute('data-instgrm-permalink', 'https://www.instagram.com/casamexicankitchen/');
+        embed.setAttribute('data-instgrm-version', '14');
+        embed.style.cssText = 'background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);';
 
-    prevButton.addEventListener('click', () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
+        // Clear the gallery grid and add the embed
+        galleryGrid.innerHTML = '';
+        galleryGrid.appendChild(embed);
+
+        // Process the Instagram embed
+        if (window.instgrm) {
+            window.instgrm.Embeds.process();
+        } else {
+            console.warn('Instagram embed script not loaded');
         }
-    });
-
-    nextButton.addEventListener('click', () => {
-        if (currentIndex < slides.length - 1) {
-            currentIndex++;
-            updateCarousel();
-        }
-    });
-
-    // Initialize Instagram embed
-    if (window.instgrm) {
-        window.instgrm.Embeds.process();
+    } catch (error) {
+        console.error('Error loading Instagram content:', error);
+        throw error;
     }
-
-    // Initialize carousel
-    updateCarousel();
-
-    // Handle window resize
-    window.addEventListener('resize', updateCarousel);
-
-    return []; // Return empty array since we're handling the display directly
 }
 
+// Function to load Facebook content
 async function loadFacebookContent() {
-    // This would be replaced with actual Facebook API integration
-    return [
-        {
-            imageUrl: 'images/LOGO2.png',
-            title: 'Facebook Post 1',
-            description: 'Posted on Facebook'
-        },
-        // Add more mock items as needed
-    ];
+    const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
+    if (!galleryGrid) return;
+    
+    galleryGrid.innerHTML = '<p class="error-message">Facebook integration coming soon!</p>';
 }
 
+// Function to load YouTube content
 async function loadYouTubeContent() {
-    // This would be replaced with actual YouTube API integration
-    return [
-        {
-            imageUrl: 'images/LOGO3.png',
-            title: 'YouTube Video 1',
-            description: 'Posted on YouTube'
-        },
-        // Add more mock items as needed
-    ];
+    const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
+    if (!galleryGrid) return;
+    
+    galleryGrid.innerHTML = '<p class="error-message">YouTube integration coming soon!</p>';
 } 
