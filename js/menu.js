@@ -206,10 +206,7 @@ async function loadMenuItems() {
                 const menuItem = document.createElement('div');
                 menuItem.className = 'menu-item';
                 menuItem.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                        <h4>${item.title}</h4>
-                        <div style="color: var(--orange); font-weight: 600;">$${item.price}</div>
-                    </div>
+                    <h4>${item.title}</h4>
                     <p style="color: var(--light-green); font-size: 0.9rem;">${item.description ? item.description.substring(0, 60) + '...' : ''}</p>
                 `;
                 menuItemsContainer.appendChild(menuItem);
