@@ -13,7 +13,7 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - {label: "Layout", name: "layout", widget: "hidden", default: "menu-item"}
-      - {label: "Category", name: "category", widget: "select", options: ["Tacos & Antojitos", "Platos Principales", "Bebidas"]}
+      - {label: "Category", name: "category", widget: "select", options: ["Appetizers", "Salads", "Mexican Snack", "Entrees", "Specials", "Kids Menu", "Sides", "Drinks"]}
       - {label: "Title", name: "title", widget: "string"}
       - {label: "Description", name: "description", widget: "text"}
       - {label: "Price", name: "price", widget: "string", required: false}
