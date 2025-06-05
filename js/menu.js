@@ -303,7 +303,9 @@ async function loadMenuItems() {
         // Add full menu button handler
         const fullMenuButton = document.getElementById('view-full-menu');
         if (fullMenuButton) {
-            fullMenuButton.addEventListener('click', () => {
+            fullMenuButton.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default button behavior
+                console.log('Full menu button clicked');
                 showFullMenu(menuData);
             });
         }
