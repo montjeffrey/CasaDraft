@@ -6,8 +6,8 @@ async function loadInstagramPosts() {
     if (!grid) return;
     
     grid.innerHTML = `
-        <div class="loading">Instagram gallery coming soon!</div>
-        <div style="text-align:center; margin-top:1rem;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+            <div class="loading" style="text-align: center; font-size: 1.2rem; margin-bottom: 1rem;">Instagram gallery coming soon!</div>
             <a href="https://www.instagram.com/${INSTAGRAM_USERNAME}/" target="_blank" class="cta-button">View Our Instagram Profile</a>
         </div>
     `;

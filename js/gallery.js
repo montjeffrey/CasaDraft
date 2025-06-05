@@ -129,7 +129,12 @@ async function loadFacebookContent() {
     const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
     if (!galleryGrid) return;
     
-    galleryGrid.innerHTML = '<p class="error-message">Facebook integration coming soon!</p>';
+    galleryGrid.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+            <div class="loading" style="text-align: center; font-size: 1.2rem; margin-bottom: 1rem;">Facebook gallery coming soon!</div>
+            <a href="https://www.facebook.com/casamexicankitchen" target="_blank" class="cta-button">View Our Facebook Page</a>
+        </div>
+    `;
 }
 
 // Function to load YouTube content
@@ -137,5 +142,10 @@ async function loadYouTubeContent() {
     const galleryGrid = document.querySelector('#social-gallery .gallery-grid');
     if (!galleryGrid) return;
     
-    galleryGrid.innerHTML = '<p class="error-message">YouTube integration coming soon!</p>';
+    galleryGrid.innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;">
+            <div class="loading" style="text-align: center; font-size: 1.2rem; margin-bottom: 1rem;">YouTube gallery coming soon!</div>
+            <a href="https://www.youtube.com/@casamexicankitchen" target="_blank" class="cta-button">View Our YouTube Channel</a>
+        </div>
+    `;
 } 
