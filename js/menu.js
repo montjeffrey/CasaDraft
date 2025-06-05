@@ -5,6 +5,7 @@ function hasTextContent(element, text) {
 
 // Function to create a detailed menu item view
 function createDetailedMenuItem(item) {
+    console.log('Creating detailed view for item:', item);
     const detailDiv = document.createElement('div');
     detailDiv.className = 'menu-item-detail';
     
@@ -26,6 +27,9 @@ function createDetailedMenuItem(item) {
 
 // Function to show detailed view for a category
 function showCategoryDetails(category, items) {
+    console.log('Showing details for category:', category.querySelector('h3').textContent);
+    console.log('Items to display:', items);
+
     // Remove any existing overlay first
     hideCategoryDetails();
 
@@ -71,9 +75,16 @@ function showCategoryDetails(category, items) {
     detailsContent.appendChild(categoryTitle);
 
     // Add menu items
-    items.forEach(item => {
-        detailsContent.appendChild(createDetailedMenuItem(item));
-    });
+    if (items && items.length > 0) {
+        items.forEach(item => {
+            detailsContent.appendChild(createDetailedMenuItem(item));
+        });
+    } else {
+        const noItems = document.createElement('p');
+        noItems.textContent = 'No items available in this category.';
+        noItems.style.color = 'var(--sage)';
+        detailsContent.appendChild(noItems);
+    }
 
     // Create close button
     const closeButton = document.createElement('button');
@@ -177,8 +188,15 @@ async function loadMenuItems() {
         // For each category container
         categoryContainers.forEach(container => {
             const categoryTitle = container.querySelector('h3').textContent;
+            console.log('Processing category:', categoryTitle);
             const items = itemsByCategory[categoryTitle] || [];
+            console.log('Items for category:', items);
+            
             const menuItemsContainer = container.querySelector('.menu-items');
+            if (!menuItemsContainer) {
+                console.warn('Menu items container not found for category:', categoryTitle);
+                return;
+            }
             
             // Clear existing items
             menuItemsContainer.innerHTML = '';
@@ -224,6 +242,7 @@ async function loadMenuItems() {
                 if (e.target.classList.contains('close-details')) {
                     return;
                 }
+                console.log('Category clicked:', categoryTitle);
                 showCategoryDetails(container, items);
             });
         });
