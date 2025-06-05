@@ -20,13 +20,18 @@ async function loadMenuItems() {
 
         // Update each menu category section
         Object.entries(menuByCategory).forEach(([category, items]) => {
-            const categoryContainer = document.querySelector(`.menu-category h3:contains('${category}')`)?.closest('.menu-category');
-            if (!categoryContainer) {
+            // Find the category container by looking for an h3 with matching text
+            const categoryHeaders = document.querySelectorAll('.menu-category h3');
+            const categoryHeader = Array.from(categoryHeaders).find(h3 => h3.textContent.trim() === category);
+            
+            if (!categoryHeader) {
                 console.warn(`Category container not found for: ${category}`);
                 return;
             }
 
+            const categoryContainer = categoryHeader.closest('.menu-category');
             const menuItemsContainer = categoryContainer.querySelector('.menu-items');
+            
             if (!menuItemsContainer) {
                 console.warn(`Menu items container not found for category: ${category}`);
                 return;
