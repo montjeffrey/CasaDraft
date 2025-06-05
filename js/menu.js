@@ -152,6 +152,91 @@ function hideCategoryDetails(overlay) {
     }, 300);
 }
 
+// Function to show full menu
+function showFullMenu(menuData) {
+    console.log('Showing full menu');
+    const overlay = document.getElementById('full-menu-overlay');
+    const categoriesContainer = document.getElementById('full-menu-categories');
+    
+    // Clear existing content
+    categoriesContainer.innerHTML = '';
+    
+    // Group items by category
+    const itemsByCategory = {};
+    menuData.forEach(item => {
+        if (!itemsByCategory[item.category]) {
+            itemsByCategory[item.category] = [];
+        }
+        itemsByCategory[item.category].push(item);
+    });
+    
+    // Create category sections
+    Object.entries(itemsByCategory).forEach(([category, items]) => {
+        const categorySection = document.createElement('div');
+        categorySection.className = 'full-menu-category';
+        
+        const categoryTitle = document.createElement('h3');
+        categoryTitle.textContent = category;
+        categorySection.appendChild(categoryTitle);
+        
+        const itemsGrid = document.createElement('div');
+        itemsGrid.className = 'full-menu-items';
+        
+        items.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'full-menu-item';
+            
+            const title = document.createElement('h4');
+            title.textContent = item.title;
+            itemElement.appendChild(title);
+            
+            if (item.description) {
+                const description = document.createElement('p');
+                description.textContent = item.description;
+                itemElement.appendChild(description);
+            }
+            
+            if (item.price) {
+                const price = document.createElement('div');
+                price.className = 'price';
+                price.textContent = item.price;
+                itemElement.appendChild(price);
+            }
+            
+            itemsGrid.appendChild(itemElement);
+        });
+        
+        categorySection.appendChild(itemsGrid);
+        categoriesContainer.appendChild(categorySection);
+    });
+    
+    // Show overlay with animation
+    overlay.style.display = 'block';
+    overlay.style.opacity = '0';
+    requestAnimationFrame(() => {
+        overlay.style.opacity = '1';
+    });
+    
+    // Prevent body scrolling
+    document.body.style.overflow = 'hidden';
+}
+
+// Function to hide full menu
+function hideFullMenu() {
+    const overlay = document.getElementById('full-menu-overlay');
+    if (!overlay) return;
+    
+    // Fade out animation
+    overlay.style.opacity = '0';
+    
+    // Remove overlay after animation
+    setTimeout(() => {
+        overlay.style.display = 'none';
+        // Restore body scrolling
+        document.body.style.overflow = '';
+    }, 300);
+}
+
 // Function to load menu items
 async function loadMenuItems() {
     try {
@@ -214,6 +299,22 @@ async function loadMenuItems() {
                 });
             }
         });
+
+        // Add full menu button handler
+        const fullMenuButton = document.getElementById('view-full-menu');
+        if (fullMenuButton) {
+            fullMenuButton.addEventListener('click', () => {
+                showFullMenu(menuData);
+            });
+        }
+
+        // Add escape key handler for full menu
+        document.addEventListener('keydown', function escHandler(e) {
+            if (e.key === 'Escape') {
+                hideFullMenu();
+            }
+        });
+
     } catch (error) {
         console.error('Error loading menu items:', error);
         const menuContainer = document.querySelector('.menu-categories');

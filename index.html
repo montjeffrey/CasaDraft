@@ -766,6 +766,96 @@
                 margin-bottom: 1.5rem;
             }
         }
+
+        .full-menu-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--cream);
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .full-menu-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .full-menu-header h2 {
+            color: var(--forest);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .decorative-line {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--orange), var(--red));
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        .full-menu-category {
+            margin-bottom: 3rem;
+        }
+
+        .full-menu-category h3 {
+            color: var(--orange);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .full-menu-category h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--red);
+            border-radius: 2px;
+        }
+
+        .full-menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .full-menu-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .full-menu-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .full-menu-item h4 {
+            color: var(--forest);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .full-menu-item .price {
+            color: var(--orange);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .full-menu-item p {
+            color: var(--sage);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -878,9 +968,21 @@
                 </div>
             </div>
             
-            <a href="#contact" class="cta-button" style="margin-top: 3rem;">View Full Menu</a>
+            <button id="view-full-menu" class="cta-button" style="margin-top: 3rem;">View Full Menu</button>
         </div>
     </section>
+    
+    <!-- Full Menu View -->
+    <div id="full-menu-overlay" class="menu-category-details" style="display: none;">
+        <div class="menu-details-content full-menu-content">
+            <div class="full-menu-header">
+                <h2>Full Menu</h2>
+                <div class="decorative-line"></div>
+            </div>
+            <div id="full-menu-categories"></div>
+            <button class="close-details" onclick="hideFullMenu()">×</button>
+        </div>
+    </div>
     
     <!-- Location Section -->
     <section class="location" id="location">
